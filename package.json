@@ -11,12 +11,9 @@
   },
   "dependencies": {
     "@mantine/core": "^8.2.4",
-    "@mantine/hooks": "^8.2.4",
-    "@progress/kendo-react-pdf": "^11.3.1",
     "lucide-react": "^0.539.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
-    "react-to-pdf": "^2.0.1",
     "react-to-print": "^3.1.1"
   },
   "devDependencies": {
