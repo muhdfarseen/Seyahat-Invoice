@@ -18,7 +18,6 @@ import {
   Accordion,
   ThemeIcon,
   ScrollArea,
-  Input,
   Select,
 } from "@mantine/core";
 import { Plus, Trash2, Download } from "lucide-react";
