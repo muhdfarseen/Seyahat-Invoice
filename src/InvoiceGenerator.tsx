@@ -522,7 +522,7 @@ Wishing you safe travels and unforgettable experiences!
                     Sub Total
                   </Text>
                   <Text size="sm" fw={500}>
-                    ₹{calculateSubtotal().toFixed(2)}
+                    {currency} {calculateSubtotal().toFixed(2)}
                   </Text>
                 </Group>
                 {discountValue > 0 && (
@@ -535,7 +535,7 @@ Wishing you safe travels and unforgettable experiences!
                       Discount
                     </Text>
                     <Text size="sm" fw={500} c="red.6">
-                      -₹{discountValue.toFixed(2)}
+                      -{currency} {discountValue.toFixed(2)}
                     </Text>
                   </Group>
                 )}
