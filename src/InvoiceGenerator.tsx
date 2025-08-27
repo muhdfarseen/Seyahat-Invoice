@@ -26,7 +26,7 @@ import { useReactToPrint } from "react-to-print";
 const InvoiceGenerator = () => {
   const contentRef = useRef<HTMLDivElement>(null);
   const reactToPrintFn = useReactToPrint({ contentRef });
-  const [currency,setCurrency]=useState("₹");
+  const [currency, setCurrency] = useState("₹");
 
   const [invoiceData, setInvoiceData] = useState({
     addressLine1: "Near Bilal Masjid, Kattampally Road",
@@ -228,7 +228,12 @@ Wishing you safe travels and unforgettable experiences!
   return (
     <Flex direction={"column"} h="100vh" bg="gray.0">
       {/* Header Section */}
-      <Paper style={{position:"sticky",top:0,zIndex:9000}} shadow="md" p="lg" radius={0}>
+      <Paper
+        style={{ position: "sticky", top: 0, zIndex: 9000 }}
+        shadow="md"
+        p="lg"
+        radius={0}
+      >
         <Group justify="space-between" align="center">
           <Image src={"/Seyahat.png"} alt="Logo" w={"100"} />
           <Title order={5} c="gray.9">
@@ -372,10 +377,14 @@ Wishing you safe travels and unforgettable experiences!
                 </Box>
 
                 {/* Discount Section */}
-                <Flex gap={'md'} align={"center"} justify={"end"}>
+                <Flex gap={"md"} align={"center"} justify={"end"}>
+                  <Select
+                    label={"Choose Currency"}
+                    value={currency}
+                    data={["₹", "AED", "QAR", "$"]}
+                    onChange={(d: any) => setCurrency(d)}
+                  />
 
-                  <Select label={"Choose Currency"} value={currency} data={["₹","AED","QAR","$"]} onChange={(d:any)=>setCurrency(d)}   />                
-                  
                   <NumberInput
                     styles={{
                       input: {
@@ -419,153 +428,155 @@ Wishing you safe travels and unforgettable experiences!
 
         <Paper withBorder radius={0}>
           <ScrollArea h={"calc(100vh - 78px)"}>
-          <Paper ref={contentRef} p="xl" maw="800px" mx="auto">
-            {/* Header */}
-            <Group justify="space-between" mb="xl">
-              <Group gap="md">
-                <Image src={"/Seyahat.png"} alt="Logo" w={200} />
-              </Group>
-              <Box>
-                <Title order={2} c="gray.9">
-                  INVOICE
-                </Title>
-                <Title order={6} c="gray.9">
-                  #{random10Digit}
-                </Title>
-              </Box>
-            </Group>
-
-            {/* Company Address */}
-            <Box mb="xl">
-              <Text size="sm" c="gray.7">
-                {invoiceData.addressLine1}
-              </Text>
-              <Text size="sm" c="gray.7">
-                {invoiceData.addressLine2}
-              </Text>
-              <Text mt={10} size="sm" c="gray.7">
-                {invoiceData.email}
-              </Text>
-              <Text size="sm" c="gray.9" fw={700}>
-                {invoiceData.phone}
-              </Text>
-            </Box>
-
-            {/* Customer and Invoice Details */}
-            <Group justify="space-between" mb="xl">
-              <Box>
-                <Text size="lg" fw={700} c="gray.9">
-                  {invoiceData.invoiceTo}
-                </Text>
-              </Box>
-              <Box style={{ textAlign: "right" }}>
-                <Text size="sm" c="gray.9">
-                  Invoice Date :{" "}
-                  <Text component="span" ml="sm">
-                    {invoiceData.invoiceDate}
-                  </Text>
-                </Text>
-              </Box>
-            </Group>
-
-            {/* Items Table */}
-            <Table mb="xl">
-              <Table.Thead bg="gray.9">
-                <Table.Tr>
-                  <Table.Th style={{ color: "white", padding: "12px" }}>
-                    #
-                  </Table.Th>
-                  <Table.Th style={{ color: "white", padding: "12px" }}>
-                    Description
-                  </Table.Th>
-                  <Table.Th
-                    style={{
-                      color: "white",
-                      padding: "12px",
-                      textAlign: "center",
-                    }}
-                  >
-                    Qty
-                  </Table.Th>
-                  <Table.Th
-                    style={{
-                      color: "white",
-                      padding: "12px",
-                      textAlign: "right",
-                    }}
-                  >
-                    Rate
-                  </Table.Th>
-                  <Table.Th
-                    style={{
-                      color: "white",
-                      padding: "12px",
-                      textAlign: "right",
-                    }}
-                  >
-                    Amount
-                  </Table.Th>
-                </Table.Tr>
-              </Table.Thead>
-              <Table.Tbody>{previewRows}</Table.Tbody>
-            </Table>
-
-            {/* Total Section */}
-            <Flex justify="flex-end" mb="xl">
-              <Box w={256}>
-                <Group
-                  justify="space-between"
-                  py="xs"
-                  style={{ borderBottom: "1px solid #e9ecef" }}
-                >
-                  <Text size="sm" fw={500}>
-                    Sub Total
-                  </Text>
-                  <Text size="sm" fw={500}>
-                    {currency} {calculateSubtotal().toFixed(2)}
-                  </Text>
+            <Paper ref={contentRef} p="xl" maw="800px" mx="auto">
+              {/* Header */}
+              <Group justify="space-between" mb="xl">
+                <Group gap="md">
+                  <Image src={"/Seyahat.png"} alt="Logo" w={200} />
                 </Group>
-                {discountValue > 0 && (
+                <Box>
+                  <Title order={2} c="gray.9">
+                    INVOICE
+                  </Title>
+                  <Title order={6} c="gray.9">
+                    #{random10Digit}
+                  </Title>
+                </Box>
+              </Group>
+
+              {/* Company Address */}
+              <Box mb="xl">
+                <Text size="sm" c="gray.7">
+                  {invoiceData.addressLine1}
+                </Text>
+                <Text size="sm" c="gray.7">
+                  {invoiceData.addressLine2}
+                </Text>
+                <Text mt={10} size="sm" c="gray.7">
+                  {invoiceData.email}
+                </Text>
+                <Text size="sm" c="gray.9" fw={700}>
+                  {invoiceData.phone}
+                </Text>
+              </Box>
+
+              {/* Customer and Invoice Details */}
+              <Group justify="space-between" mb="xl">
+                <Box>
+                  <Text size="lg" fw={700} c="gray.9">
+                    {invoiceData.invoiceTo}
+                  </Text>
+                </Box>
+                <Box style={{ textAlign: "right" }}>
+                  <Text size="sm" c="gray.9">
+                    Invoice Date :{" "}
+                    <Text component="span" ml="sm">
+                      {invoiceData.invoiceDate}
+                    </Text>
+                  </Text>
+                </Box>
+              </Group>
+
+              {/* Items Table */}
+              <Table mb="xl">
+                <Table.Thead bg="gray.9">
+                  <Table.Tr>
+                    <Table.Th style={{ color: "white", padding: "12px" }}>
+                      #
+                    </Table.Th>
+                    <Table.Th style={{ color: "white", padding: "12px" }}>
+                      Description
+                    </Table.Th>
+                    <Table.Th
+                      style={{
+                        color: "white",
+                        padding: "12px",
+                        textAlign: "center",
+                      }}
+                    >
+                      Qty
+                    </Table.Th>
+                    <Table.Th
+                      style={{
+                        color: "white",
+                        padding: "12px",
+                        textAlign: "right",
+                      }}
+                    >
+                      Rate
+                    </Table.Th>
+                    <Table.Th
+                      style={{
+                        color: "white",
+                        padding: "12px",
+                        textAlign: "right",
+                      }}
+                    >
+                      Amount
+                    </Table.Th>
+                  </Table.Tr>
+                </Table.Thead>
+                <Table.Tbody>{previewRows}</Table.Tbody>
+              </Table>
+
+              {/* Total Section */}
+              <Flex justify="flex-end" mb="xl">
+                <Box w={256}>
                   <Group
                     justify="space-between"
                     py="xs"
                     style={{ borderBottom: "1px solid #e9ecef" }}
                   >
-                    <Text size="sm" fw={500} c="red.6">
-                      Discount
+                    <Text size="sm" fw={500}>
+                      Sub Total
                     </Text>
-                    <Text size="sm" fw={500} c="red.6">
-                      -{currency} {discountValue.toFixed(2)}
+                    <Text size="sm" fw={500}>
+                      {currency} {calculateSubtotal().toFixed(2)}
                     </Text>
                   </Group>
-                )}
-                <Group
-                  justify="space-between"
-                  py="md"
-                  style={{ borderBottom: "2px solid #212529" }}
-                >
-                  <Text fw={700}>Total</Text>
-                  <Text fw={700}>{currency}  {calculateTotal().toFixed(2)}</Text>
-                </Group>
-              </Box>
-            </Flex>
-
-            {/* Footer */}
-            <Box mt="300">
-              <Stack gap={5}>
-                {invoiceData.footer.split("\n").map((line, index) => (
-                  <Text
-                    key={index}
-                    size="sm"
-                    c={line.startsWith("#") ? "blue.5" : "gray.7"}
-                    fw={line.startsWith("#") ? 500 : 400}
+                  {discountValue > 0 && (
+                    <Group
+                      justify="space-between"
+                      py="xs"
+                      style={{ borderBottom: "1px solid #e9ecef" }}
+                    >
+                      <Text size="sm" fw={500} c="red.6">
+                        Discount
+                      </Text>
+                      <Text size="sm" fw={500} c="red.6">
+                        -{currency} {discountValue.toFixed(2)}
+                      </Text>
+                    </Group>
+                  )}
+                  <Group
+                    justify="space-between"
+                    py="md"
+                    style={{ borderBottom: "2px solid #212529" }}
                   >
-                    {line}
-                  </Text>
-                ))}
-              </Stack>
-            </Box>
-          </Paper>
+                    <Text fw={700}>Total</Text>
+                    <Text fw={700}>
+                      {currency} {calculateTotal().toFixed(2)}
+                    </Text>
+                  </Group>
+                </Box>
+              </Flex>
+
+              {/* Footer */}
+              <Box mt="300">
+                <Stack gap={5}>
+                  {invoiceData.footer.split("\n").map((line, index) => (
+                    <Text
+                      key={index}
+                      size="sm"
+                      c={line.startsWith("#") ? "blue.5" : "gray.7"}
+                      fw={line.startsWith("#") ? 500 : 400}
+                    >
+                      {line}
+                    </Text>
+                  ))}
+                </Stack>
+              </Box>
+            </Paper>
           </ScrollArea>
         </Paper>
       </SimpleGrid>
