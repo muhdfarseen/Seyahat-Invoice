@@ -18,6 +18,8 @@ import {
   Accordion,
   ThemeIcon,
   ScrollArea,
+  Input,
+  Select,
 } from "@mantine/core";
 import { Plus, Trash2, Download } from "lucide-react";
 import { useReactToPrint } from "react-to-print";
@@ -25,6 +27,7 @@ import { useReactToPrint } from "react-to-print";
 const InvoiceGenerator = () => {
   const contentRef = useRef<HTMLDivElement>(null);
   const reactToPrintFn = useReactToPrint({ contentRef });
+  const [currency,setCurrency]=useState("₹");
 
   const [invoiceData, setInvoiceData] = useState({
     addressLine1: "Near Bilal Masjid, Kattampally Road",
@@ -177,7 +180,6 @@ Wishing you safe travels and unforgettable experiences!
       </Table.Td>
       <Table.Td align="right">
         <Text ta={"right"} size="sm" fw={"700"}>
-          ₹
           {(
             (typeof item.qty === "number" ? item.qty : 0) *
             (typeof item.rate === "number" ? item.rate : 0)
@@ -371,7 +373,10 @@ Wishing you safe travels and unforgettable experiences!
                 </Box>
 
                 {/* Discount Section */}
-                <Flex align={"center"} justify={"end"}>
+                <Flex gap={'md'} align={"center"} justify={"end"}>
+
+                  <Select label={"Choose Currency"} value={currency} data={["₹","AED","QAR"]} onChange={(d:any)=>setCurrency(d)}   />                
+                  
                   <NumberInput
                     styles={{
                       input: {
@@ -379,7 +384,7 @@ Wishing you safe travels and unforgettable experiences!
                       },
                     }}
                     hideControls
-                    label="Total Discount (₹)"
+                    label="Total Discount"
                     value={discountValue}
                     onChange={handleDiscountChange}
                     min={0}
@@ -541,7 +546,7 @@ Wishing you safe travels and unforgettable experiences!
                   style={{ borderBottom: "2px solid #212529" }}
                 >
                   <Text fw={700}>Total</Text>
-                  <Text fw={700}>₹{calculateTotal().toFixed(2)}</Text>
+                  <Text fw={700}>{currency}  {calculateTotal().toFixed(2)}</Text>
                 </Group>
               </Box>
             </Flex>
