@@ -374,7 +374,7 @@ Wishing you safe travels and unforgettable experiences!
                 {/* Discount Section */}
                 <Flex gap={'md'} align={"center"} justify={"end"}>
 
-                  <Select label={"Choose Currency"} value={currency} data={["₹","AED","QAR"]} onChange={(d:any)=>setCurrency(d)}   />                
+                  <Select label={"Choose Currency"} value={currency} data={["₹","AED","QAR","$"]} onChange={(d:any)=>setCurrency(d)}   />                
                   
                   <NumberInput
                     styles={{
