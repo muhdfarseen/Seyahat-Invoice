@@ -211,7 +211,7 @@ Wishing you safe travels and unforgettable experiences!
         {(typeof item.rate === "number" ? item.rate : 0).toFixed(2)}
       </Table.Td>
       <Table.Td style={{ textAlign: "right", fontWeight: 500 }}>
-        ₹
+        {currency}{" "}
         {(
           (typeof item.qty === "number" ? item.qty : 0) *
           (typeof item.rate === "number" ? item.rate : 0)
