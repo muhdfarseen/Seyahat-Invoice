@@ -29,10 +29,10 @@ const InvoiceGenerator = () => {
   const [currency, setCurrency] = useState("₹");
 
   const [invoiceData, setInvoiceData] = useState({
-    addressLine1: "Near Bilal Masjid, Kattampally Road",
-    addressLine2: "Puthiyatheru, Kannur",
+    addressLine1: "Ground Floor, Royal Oak Mall,",
+    addressLine2: "Thana, Kannur",
     email: "seyahatholidays@gmail.com",
-    phone: "965 655 0235 | 860 655 0235",
+    phone: "860 655 0235 | 871 420 0235",
     invoiceTo: "",
     invoiceDate: new Date().toISOString().split("T")[0],
     items: [{ id: 1, description: "", qty: 1, rate: 0 }],
