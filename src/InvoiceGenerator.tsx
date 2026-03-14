@@ -20,10 +20,14 @@ import {
   ScrollArea,
   Select,
 } from "@mantine/core";
-import { Plus, Trash2, Download } from "lucide-react";
+import { Plus, Trash2, Download, Image as ImageIcon } from "lucide-react";
 import { useReactToPrint } from "react-to-print";
 
-const InvoiceGenerator = () => {
+interface InvoiceGeneratorProps {
+  onNavigatePoster: () => void;
+}
+
+const InvoiceGenerator = ({ onNavigatePoster }: InvoiceGeneratorProps) => {
   const contentRef = useRef<HTMLDivElement>(null);
   const reactToPrintFn = useReactToPrint({ contentRef });
   const [currency, setCurrency] = useState("₹");
@@ -239,15 +243,27 @@ Wishing you safe travels and unforgettable experiences!
           <Title order={5} c="gray.9">
             Invoice Generator
           </Title>
-          <Button
-            radius={"md"}
-            leftSection={<Download size={16} />}
-            onClick={reactToPrintFn}
-            color="green"
-            size="sm"
-          >
-            Download PDF
-          </Button>
+          <Group gap="sm">
+            <Button
+              radius={"md"}
+              leftSection={<ImageIcon size={16} />}
+              onClick={onNavigatePoster}
+              color="teal"
+              variant="light"
+              size="sm"
+            >
+              Generate Poster
+            </Button>
+            <Button
+              radius={"md"}
+              leftSection={<Download size={16} />}
+              onClick={reactToPrintFn}
+              color="green"
+              size="sm"
+            >
+              Download PDF
+            </Button>
+          </Group>
         </Group>
       </Paper>
 
