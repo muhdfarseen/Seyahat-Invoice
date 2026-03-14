@@ -51,6 +51,14 @@ const LOGO_OPTIONS = [
   { value: "other", label: "Other (Upload)" },
 ];
 
+const HEADER_BANNER_OPTIONS = [
+  { value: "/headerbanner/banner1.svg", label: "Banner 1" },
+  { value: "/headerbanner/banner2.svg", label: "Banner 2" },
+  { value: "/headerbanner/banner3.svg", label: "Banner 3" },
+  { value: "/headerbanner/banner4.svg", label: "Banner 4" },
+  { value: "/headerbanner/banner5.svg", label: "Banner 5" },
+];
+
 const createEmptyCard = (id: number): FlightCard => ({
   id,
   from: "Calicut",
@@ -75,6 +83,7 @@ interface PosterGeneratorProps {
 const PosterGenerator = ({ onNavigateInvoice }: PosterGeneratorProps) => {
   const posterRef = useRef<HTMLDivElement>(null);
   const [cards, setCards] = useState<FlightCard[]>([createEmptyCard(1)]);
+  const [headerBanner, setHeaderBanner] = useState<string>("/headerbanner/banner1.svg");
 
   const addCard = () => {
     const newId = Math.max(...cards.map((c) => c.id)) + 1;
@@ -220,7 +229,7 @@ const PosterGenerator = ({ onNavigateInvoice }: PosterGeneratorProps) => {
       {/* Header — actual image */}
       <div style={{ position: "relative" }}>
         <img
-          src="/HeaderPoster.svg"
+          src={headerBanner}
           alt="Header"
           style={{ width: "100%", display: "block" }}
         />
@@ -526,6 +535,19 @@ const PosterGenerator = ({ onNavigateInvoice }: PosterGeneratorProps) => {
         <Paper withBorder radius={0}>
           <ScrollArea h="calc(100vh - 78px)">
             <Stack p="md" gap="lg">
+              {/* Poster Settings */}
+              <Paper withBorder p="md" radius="md" bg="gray.0">
+                <Text size="sm" fw={700} c="green.7" mb="sm">
+                  Poster Settings
+                </Text>
+                <Select
+                  label="Header Banner"
+                  data={HEADER_BANNER_OPTIONS}
+                  value={headerBanner}
+                  onChange={(val) => setHeaderBanner(val || "/headerbanner/banner1.svg")}
+                />
+              </Paper>
+
               {/* Flight Cards */}
               {cards.map((card, cardIndex) => (
                 <Paper key={card.id} withBorder p="md" radius="md" bg="gray.0">
