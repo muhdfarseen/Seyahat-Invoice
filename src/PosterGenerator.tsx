@@ -36,7 +36,7 @@ interface FlightCard {
   logoFile: File | null;
   logoUrl: string;
   logoType: string;
-  price: number;
+  price: number | string;
   priceLabel: string;
 }
 
@@ -314,7 +314,7 @@ const PosterGenerator = ({ onNavigateInvoice }: PosterGeneratorProps) => {
                   marginBottom: 10,
                 }}
               >
-                {card.connectingDetails.map((detail, i) => (
+                {card.connectingDetails.filter((detail) => detail.trim() !== "").map((detail, i) => (
                   <span
                     key={i}
                     style={{
@@ -335,27 +335,29 @@ const PosterGenerator = ({ onNavigateInvoice }: PosterGeneratorProps) => {
               </div>
 
               {/* Luggage Badge */}
-              <div
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 6,
-                  background: "#EFF8FF",
-                  color: "#017746",
-                  padding: "5px 16px",
-                  borderRadius: 999,
-                  fontSize: 14,
-                  fontWeight: 700,
-                  fontFamily: "'Inter', sans-serif",
-                  marginBottom: 14,
-                }}
-              >
-                <IconLuggage size={18} stroke={2.2} /> {card.luggage}
-              </div>
+              {card.luggage && card.luggage.trim() !== "" && (
+                <div
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 6,
+                    background: "#EFF8FF",
+                    color: "#017746",
+                    padding: "5px 16px",
+                    borderRadius: 999,
+                    fontSize: 14,
+                    fontWeight: 700,
+                    fontFamily: "'Inter', sans-serif",
+                    marginBottom: 14,
+                  }}
+                >
+                  <IconLuggage size={18} stroke={2.2} /> {card.luggage}
+                </div>
+              )}
 
               {/* Date Badges */}
               <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                {card.dates.map((d, i) => (
+                {card.dates.filter((d) => d.day.trim() !== "" || d.month.trim() !== "").map((d, i) => (
                   <div
                     key={i}
                     style={{
@@ -459,7 +461,7 @@ const PosterGenerator = ({ onNavigateInvoice }: PosterGeneratorProps) => {
                     fontFamily: "'Inter', sans-serif",
                   }}
                 >
-                  ₹{card.price}
+                  {card.price !== "" && card.price !== null && card.price !== undefined ? `₹${card.price}` : ""}
                 </div>
                 <div
                   style={{
