@@ -57,7 +57,11 @@ const HEADER_BANNER_OPTIONS = [
   { value: "/headerbanner/banner3.svg", label: "Banner 3" },
   { value: "/headerbanner/banner4.svg", label: "Banner 4" },
   { value: "/headerbanner/banner5.svg", label: "Banner 5" },
+  { value: "/headerbanner/banner6.svg", label: "Banner 6" },
+  { value: "/headerbanner/banner7.svg", label: "Banner 7" },
+  { value: "/headerbanner/banner8.svg", label: "Banner 8" },
 ];
+
 
 const createEmptyCard = (id: number): FlightCard => ({
   id,
