@@ -31,6 +31,7 @@ const InvoiceGenerator = ({ onNavigatePoster }: InvoiceGeneratorProps) => {
   const contentRef = useRef<HTMLDivElement>(null);
   const reactToPrintFn = useReactToPrint({ contentRef });
   const [currency, setCurrency] = useState("₹");
+  const [selectedLogo, setSelectedLogo] = useState("seyahat");
 
   const [invoiceData, setInvoiceData] = useState({
     addressLine1: "Ground Floor, Royal Oak Mall,",
@@ -239,7 +240,7 @@ Wishing you safe travels and unforgettable experiences!
         radius={0}
       >
         <Group justify="space-between" align="center">
-          <Image src={"/Seyahat.png"} alt="Logo" w={"100"} />
+          <Image src={`Seyahat.png`} alt="Logo" w={"100"} />
           <Title order={5} c="gray.9">
             Invoice Generator
           </Title>
@@ -288,6 +289,15 @@ Wishing you safe travels and unforgettable experiences!
                   spacing={{ base: 10, sm: "md" }}
                   verticalSpacing={{ base: "md", sm: "md" }}
                 >
+                  <Select
+                    label="Logo Selection"
+                    value={selectedLogo}
+                    data={[
+                      { value: "seyahat", label: "Seyahat" },
+                      { value: "ahma", label: "Ahma" },
+                    ]}
+                    onChange={(value) => setSelectedLogo(value || "seyahat")}
+                  />
                   <TextInput
                     label="Address Line 1"
                     value={invoiceData.addressLine1}
@@ -448,7 +458,7 @@ Wishing you safe travels and unforgettable experiences!
               {/* Header */}
               <Group justify="space-between" mb="xl">
                 <Group gap="md">
-                  <Image src={"/Seyahat.png"} alt="Logo" w={200} />
+                  <Image src={`/${selectedLogo === "seyahat" ? "Seyahat.png" : "ahma.svg"}`} alt="Logo" w={200} />
                 </Group>
                 <Box>
                   <Title order={2} c="gray.9">
