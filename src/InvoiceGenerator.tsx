@@ -28,6 +28,9 @@ interface InvoiceGeneratorProps {
   onNavigatePoster: () => void;
 }
 
+const generateRandomInvoiceNumber = () =>
+  String(Math.floor(1000000000 + Math.random() * 9000000000));
+
 const InvoiceGenerator = ({ onNavigatePoster }: InvoiceGeneratorProps) => {
   const contentRef = useRef<HTMLDivElement>(null);
   const reactToPrintFn = useReactToPrint({ contentRef });
@@ -41,6 +44,7 @@ const InvoiceGenerator = ({ onNavigatePoster }: InvoiceGeneratorProps) => {
     phone: "860 655 0235 | 871 420 0235",
     invoiceTo: "",
     invoiceDate: new Date().toISOString().split("T")[0],
+    invoiceNumber: generateRandomInvoiceNumber(),
     items: [{ id: 1, description: "", qty: 1, rate: 0 }],
     discount: 0,
     showAccountDetails: false,
@@ -57,8 +61,6 @@ We truly appreciate your business and look forward to helping you explore more d
 Wishing you safe travels and unforgettable experiences!
 #turning miles into memories`,
   });
-
-  const random10Digit = Math.floor(1000000000 + Math.random() * 9000000000);
 
   const addItem = () => {
     const newId = Math.max(...invoiceData.items.map((item) => item.id)) + 1;
@@ -143,6 +145,10 @@ Wishing you safe travels and unforgettable experiences!
     if (!isNaN(numValue) && numValue >= 0) {
       updateField("discount", numValue);
     }
+  };
+
+  const handleGenerateInvoiceNumber = () => {
+    updateField("invoiceNumber", generateRandomInvoiceNumber());
   };
 
   const rows = invoiceData.items.map((item, index) => (
@@ -364,6 +370,24 @@ Wishing you safe travels and unforgettable experiences!
                       }
                     />
                   </SimpleGrid>
+                  <Group mt="md" align="end" wrap="nowrap">
+                    <TextInput
+                      style={{ flex: 1 }}
+                      label="Invoice Number"
+                      placeholder="Enter invoice number"
+                      value={invoiceData.invoiceNumber}
+                      onChange={(e) =>
+                        updateField("invoiceNumber", e.target.value)
+                      }
+                    />
+                    <Button
+                      mt={24}
+                      variant="light"
+                      onClick={handleGenerateInvoiceNumber}
+                    >
+                      Generate Random
+                    </Button>
+                  </Group>
                 </Box>
               </Accordion.Panel>
             </Accordion.Item>
@@ -557,7 +581,7 @@ Wishing you safe travels and unforgettable experiences!
                     INVOICE
                   </Title>
                   <Title order={6} c="gray.9">
-                    #{random10Digit}
+                    #{invoiceData.invoiceNumber}
                   </Title>
                 </Box>
               </Group>
