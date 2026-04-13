@@ -19,6 +19,7 @@ import {
   ThemeIcon,
   ScrollArea,
   Select,
+  Switch,
 } from "@mantine/core";
 import { Plus, Trash2, Download, Image as ImageIcon } from "lucide-react";
 import { useReactToPrint } from "react-to-print";
@@ -42,6 +43,15 @@ const InvoiceGenerator = ({ onNavigatePoster }: InvoiceGeneratorProps) => {
     invoiceDate: new Date().toISOString().split("T")[0],
     items: [{ id: 1, description: "", qty: 1, rate: 0 }],
     discount: 0,
+    showAccountDetails: false,
+    accountHolderKey: "Holder Name",
+    accountHolderValue: "",
+    accountNumberKey: "Account Number",
+    accountNumberValue: "",
+    accountIdKey: "IBAN",
+    accountIdValue: "",
+    accountTypeKey: "Account Type",
+    accountTypeValue: "",
     footer: `Thank you for choosing us for your travel needs!
 We truly appreciate your business and look forward to helping you explore more destinations in the future.
 Wishing you safe travels and unforgettable experiences!
@@ -432,6 +442,88 @@ Wishing you safe travels and unforgettable experiences!
               </Accordion.Panel>
             </Accordion.Item>
 
+            <Accordion.Item value={"acc"}>
+              <Accordion.Control>
+                <Text size="sm" fw={700} c="gray.9">
+                  Account Details
+                </Text>
+              </Accordion.Control>
+              <Accordion.Panel>
+                <Stack>
+                  <Switch
+                    label="Include account details in invoice"
+                    checked={invoiceData.showAccountDetails}
+                    onChange={(event) =>
+                      updateField("showAccountDetails", event.currentTarget.checked)
+                    }
+                  />
+
+                  {invoiceData.showAccountDetails && (
+                    <SimpleGrid
+                      cols={{ base: 1, sm: 2, lg: 2 }}
+                      spacing={{ base: 10, sm: "md" }}
+                      verticalSpacing={{ base: "md", sm: "md" }}
+                    >
+                      <TextInput
+                        label="Field 1 Key"
+                        value={invoiceData.accountHolderKey}
+                        onChange={(e) =>
+                          updateField("accountHolderKey", e.target.value)
+                        }
+                      />
+                      <TextInput
+                        label="Field 1 Value"
+                        value={invoiceData.accountHolderValue}
+                        onChange={(e) =>
+                          updateField("accountHolderValue", e.target.value)
+                        }
+                      />
+                      <TextInput
+                        label="Field 2 Key"
+                        value={invoiceData.accountNumberKey}
+                        onChange={(e) =>
+                          updateField("accountNumberKey", e.target.value)
+                        }
+                      />
+                      <TextInput
+                        label="Field 2 Value"
+                        value={invoiceData.accountNumberValue}
+                        onChange={(e) =>
+                          updateField("accountNumberValue", e.target.value)
+                        }
+                      />
+                      <TextInput
+                        label="Field 3 Key (IBAN / IFSC)"
+                        value={invoiceData.accountIdKey}
+                        onChange={(e) =>
+                          updateField("accountIdKey", e.target.value)
+                        }
+                      />
+                      <TextInput
+                        label="Field 3 Value"
+                        value={invoiceData.accountIdValue}
+                        onChange={(e) =>
+                          updateField("accountIdValue", e.target.value)
+                        }
+                      />
+                      <TextInput
+                        label="Field 4 Key"
+                        value={invoiceData.accountTypeKey}
+                        onChange={(e) => updateField("accountTypeKey", e.target.value)}
+                      />
+                      <TextInput
+                        label="Field 4 Value"
+                        value={invoiceData.accountTypeValue}
+                        onChange={(e) =>
+                          updateField("accountTypeValue", e.target.value)
+                        }
+                      />
+                    </SimpleGrid>
+                  )}
+                </Stack>
+              </Accordion.Panel>
+            </Accordion.Item>
+
             <Accordion.Item value={"ftr"}>
               <Accordion.Control>
                 <Text size="sm" fw={700} c="gray.9">
@@ -586,6 +678,40 @@ Wishing you safe travels and unforgettable experiences!
                   </Group>
                 </Box>
               </Flex>
+
+              {invoiceData.showAccountDetails && (
+                <Box mb="xl">
+                  <Title order={5} mb="sm" c="gray.9">
+                    Account Details
+                  </Title>
+                  <Stack gap={4}>
+                    <Text size="sm" c="gray.8">
+                      <Text component="span" fw={600}>
+                        {invoiceData.accountHolderKey}:
+                      </Text>{" "}
+                      {invoiceData.accountHolderValue}
+                    </Text>
+                    <Text size="sm" c="gray.8">
+                      <Text component="span" fw={600}>
+                        {invoiceData.accountNumberKey}:
+                      </Text>{" "}
+                      {invoiceData.accountNumberValue}
+                    </Text>
+                    <Text size="sm" c="gray.8">
+                      <Text component="span" fw={600}>
+                        {invoiceData.accountIdKey}:
+                      </Text>{" "}
+                      {invoiceData.accountIdValue}
+                    </Text>
+                    <Text size="sm" c="gray.8">
+                      <Text component="span" fw={600}>
+                        {invoiceData.accountTypeKey}:
+                      </Text>{" "}
+                      {invoiceData.accountTypeValue}
+                    </Text>
+                  </Stack>
+                </Box>
+              )}
 
               {/* Footer */}
               <Box mt="300">
