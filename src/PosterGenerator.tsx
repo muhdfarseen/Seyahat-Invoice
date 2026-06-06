@@ -94,6 +94,7 @@ const PosterGenerator = ({ onNavigateInvoice }: PosterGeneratorProps) => {
   const posterRef = useRef<HTMLDivElement>(null);
   const [cards, setCards] = useState<FlightCard[]>([createEmptyCard(1)]);
   const [cardLayout, setCardLayout] = useState<"list" | "grid">("list");
+  const [gridColumns, setGridColumns] = useState<number>(3);
   const [headerBanner, setHeaderBanner] = useState<string>("/headerbanner/banner1.svg");
 
   const addCard = () => {
@@ -694,8 +695,8 @@ const PosterGenerator = ({ onNavigateInvoice }: PosterGeneratorProps) => {
           ...(cardLayout === "grid"
             ? {
                 display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: 14,
+                gridTemplateColumns: gridColumns === 2 ? "1fr 1fr" : "1fr 1fr 1fr",
+                gap: 12,
               }
             : {
                 display: "flex",
@@ -808,6 +809,23 @@ const PosterGenerator = ({ onNavigateInvoice }: PosterGeneratorProps) => {
                   fullWidth
                   color="green"
                 />
+                {cardLayout === "grid" && (
+                  <>
+                    <Text size="sm" fw={600} mt="sm" mb={4}>
+                      Grid Columns
+                    </Text>
+                    <SegmentedControl
+                      value={String(gridColumns)}
+                      onChange={(val) => setGridColumns(Number(val))}
+                      data={[
+                        { value: "2", label: "2 Columns" },
+                        { value: "3", label: "3 Columns" },
+                      ]}
+                      fullWidth
+                      color="green"
+                    />
+                  </>
+                )}
               </Paper>
 
               {/* Flight Cards */}
