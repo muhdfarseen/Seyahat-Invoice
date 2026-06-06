@@ -16,8 +16,9 @@ import {
   ScrollArea,
   FileInput,
   Select,
+  SegmentedControl,
 } from "@mantine/core";
-import { Plus, Trash2, Download, ArrowLeft, Upload } from "lucide-react";
+import { Plus, Trash2, Download, ArrowLeft, Upload, LayoutGrid, List } from "lucide-react";
 import { IconLuggage } from "@tabler/icons-react";
 import { toPng } from "html-to-image";
 
@@ -92,6 +93,7 @@ interface PosterGeneratorProps {
 const PosterGenerator = ({ onNavigateInvoice }: PosterGeneratorProps) => {
   const posterRef = useRef<HTMLDivElement>(null);
   const [cards, setCards] = useState<FlightCard[]>([createEmptyCard(1)]);
+  const [cardLayout, setCardLayout] = useState<"list" | "grid">("list");
   const [headerBanner, setHeaderBanner] = useState<string>("/headerbanner/banner1.svg");
 
   const addCard = () => {
@@ -225,6 +227,445 @@ const PosterGenerator = ({ onNavigateInvoice }: PosterGeneratorProps) => {
 
   // ─── Poster Preview ─────────────────────────────────────
 
+  const renderListCard = (card: FlightCard) => (
+    <div
+      key={card.id}
+      style={{
+        background: "#ffffff",
+        borderRadius: 30,
+        border: "1.5px solid #e2e2e2",
+        padding: "22px 24px",
+        zIndex: 1000,
+        display: "flex",
+        gap: 16,
+      }}
+    >
+      {/* Left Side */}
+      <div style={{ flex: 1, minWidth: 0 }}>
+        {/* Route Line */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            marginBottom: 10,
+          }}
+        >
+          <span
+            style={{
+              fontSize: 28,
+              fontWeight: 800,
+              color: "#1a1a1a",
+              fontFamily: "'Inter', sans-serif",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {card.from}
+          </span>
+          <img
+            src="/fromtodesign.svg"
+            alt="route"
+            style={{
+              width: 140,
+              height: 36,
+              objectFit: "contain",
+            }}
+          />
+          <span
+            style={{
+              fontSize: 28,
+              fontWeight: 800,
+              color: "#1a1a1a",
+              fontFamily: "'Inter', sans-serif",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {card.to}
+          </span>
+        </div>
+
+        {/* Connecting Details — Badges */}
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 8,
+            marginBottom: 10,
+          }}
+        >
+          {card.connectingDetails.filter((detail) => detail.trim() !== "").map((detail, i) => (
+            <span
+              key={i}
+              style={{
+                display: "inline-block",
+                background: "#F5F5F5",
+                color: "#414651",
+                fontSize: 14,
+                fontWeight: 500,
+                padding: "6px 16px",
+                borderRadius: 999,
+                fontFamily: "'Inter', sans-serif",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {detail}
+            </span>
+          ))}
+        </div>
+
+        {/* Luggage Badge */}
+        {card.luggage && card.luggage.trim() !== "" && (
+          <div
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              background: "#EFF8FF",
+              color: "#017746",
+              padding: "5px 16px",
+              borderRadius: 999,
+              fontSize: 14,
+              fontWeight: 700,
+              fontFamily: "'Inter', sans-serif",
+              marginBottom: 14,
+            }}
+          >
+            <IconLuggage size={18} stroke={2.2} /> {card.luggage}
+          </div>
+        )}
+
+        {/* Date Badges */}
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          {card.dates.filter((d) => d.day.trim() !== "" || d.month.trim() !== "").map((d, i) => (
+            <div
+              key={i}
+              style={{
+                textAlign: "center",
+                borderRadius: 15,
+                padding: "10px 14px 8px",
+                minWidth: 56,
+                background: "#F5F5F5",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: 32,
+                  fontWeight: 900,
+                  color: "#414651",
+                  lineHeight: 1,
+                  fontFamily: "'Inter', sans-serif",
+                }}
+              >
+                {d.day}
+              </div>
+              <div
+                style={{
+                  fontSize: 12,
+                  fontWeight: 700,
+                  color: "#414651",
+                  textTransform: "uppercase",
+                  fontFamily: "'Inter', sans-serif",
+                  letterSpacing: 0.5,
+                  marginTop: 2,
+                }}
+              >
+                {d.month}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Right Side */}
+      <div
+        style={{
+          width: 200,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-end",
+          justifyContent: "space-between",
+          paddingTop: 4,
+          paddingBottom: 4,
+        }}
+      >
+        {card.logoUrl ? (
+          <div
+            style={{
+              width: 170,
+              height: 80,
+              background: "#FAFAFA",
+              borderRadius: 20,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: 12,
+            }}
+          >
+            <img
+              src={card.logoUrl}
+              alt="Airline Logo"
+              style={{
+                maxWidth: "100%",
+                maxHeight: "100%",
+                objectFit: "contain",
+              }}
+            />
+          </div>
+        ) : (
+          <div
+            style={{
+              width: 170,
+              height: 80,
+              border: "2px dashed #ccc",
+              borderRadius: 20,
+              background: "#FAFAFA",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: "#bbb",
+              fontSize: 12,
+              fontFamily: "'Inter', sans-serif",
+            }}
+          >
+            Airline Logo
+          </div>
+        )}
+        <div style={{ textAlign: "right", marginTop: 12 }}>
+          <div
+            style={{
+              fontSize: 36,
+              fontWeight: 900,
+              color: "#1a8a3f",
+              lineHeight: 1.1,
+              fontFamily: "'Inter', sans-serif",
+            }}
+          >
+            {card.price !== "" && card.price !== null && card.price !== undefined ? `₹${card.price}` : ""}
+          </div>
+          <div
+            style={{
+              fontSize: 11,
+              color: "#999",
+              fontFamily: "'Inter', sans-serif",
+              marginTop: 2,
+            }}
+          >
+            {card.priceLabel}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderGridCard = (card: FlightCard) => (
+    <div
+      key={card.id}
+      style={{
+        background: "#ffffff",
+        borderRadius: 20,
+        border: "1.5px solid #e2e2e2",
+        padding: "16px 16px",
+        zIndex: 1000,
+        display: "flex",
+        flexDirection: "column",
+        gap: 8,
+      }}
+    >
+      {/* Route Line */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 6,
+          marginBottom: 4,
+        }}
+      >
+        <span
+          style={{
+            fontSize: 16,
+            fontWeight: 800,
+            color: "#1a1a1a",
+            fontFamily: "'Inter', sans-serif",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {card.from}
+        </span>
+        <img
+          src="/fromtodesign.svg"
+          alt="route"
+          style={{
+            width: 60,
+            height: 20,
+            objectFit: "contain",
+          }}
+        />
+        <span
+          style={{
+            fontSize: 16,
+            fontWeight: 800,
+            color: "#1a1a1a",
+            fontFamily: "'Inter', sans-serif",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {card.to}
+        </span>
+      </div>
+
+      {/* Airline Logo */}
+      {card.logoUrl && (
+        <div
+          style={{
+            width: "35%",
+            height: 40,
+            background: "#FAFAFA",
+            borderRadius: 12,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 6,
+          }}
+        >
+          <img
+            src={card.logoUrl}
+            alt="Airline Logo"
+            style={{
+              maxWidth: "90%",
+              maxHeight: "100%",
+              objectFit: "contain",
+            }}
+          />
+        </div>
+      )}
+
+      {/* Connecting Details */}
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 4,
+        }}
+      >
+        {card.connectingDetails.filter((detail) => detail.trim() !== "").map((detail, i) => (
+          <span
+            key={i}
+            style={{
+              display: "inline-block",
+              background: "#F5F5F5",
+              color: "#414651",
+              fontSize: 9,
+              fontWeight: 500,
+              padding: "3px 8px",
+              borderRadius: 999,
+              fontFamily: "'Inter', sans-serif",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {detail}
+          </span>
+        ))}
+      </div>
+
+      {/* Luggage Badge */}
+      {card.luggage && card.luggage.trim() !== "" && (
+        <div
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 4,
+            background: "#EFF8FF",
+            color: "#017746",
+            padding: "3px 10px",
+            borderRadius: 999,
+            fontSize: 10,
+            fontWeight: 700,
+            fontFamily: "'Inter', sans-serif",
+            width: "fit-content",
+          }}
+        >
+          <IconLuggage size={12} stroke={2.2} /> {card.luggage}
+        </div>
+      )}
+
+      {/* Bottom row: Dates + Price */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "flex-end",
+          justifyContent: "space-between",
+          marginTop: 4,
+        }}
+      >
+        {/* Date Badges */}
+        <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
+          {card.dates.filter((d) => d.day.trim() !== "" || d.month.trim() !== "").map((d, i) => (
+            <div
+              key={i}
+              style={{
+                textAlign: "center",
+                borderRadius: 10,
+                padding: "6px 8px 5px",
+                minWidth: 36,
+                background: "#F5F5F5",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: 18,
+                  fontWeight: 900,
+                  color: "#414651",
+                  lineHeight: 1,
+                  fontFamily: "'Inter', sans-serif",
+                }}
+              >
+                {d.day}
+              </div>
+              <div
+                style={{
+                  fontSize: 8,
+                  fontWeight: 700,
+                  color: "#414651",
+                  textTransform: "uppercase",
+                  fontFamily: "'Inter', sans-serif",
+                  letterSpacing: 0.3,
+                  marginTop: 1,
+                }}
+              >
+                {d.month}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Price */}
+        <div style={{ textAlign: "right" }}>
+          <div
+            style={{
+              fontSize: 22,
+              fontWeight: 900,
+              color: "#1a8a3f",
+              lineHeight: 1.1,
+              fontFamily: "'Inter', sans-serif",
+            }}
+          >
+            {card.price !== "" && card.price !== null && card.price !== undefined ? `₹${card.price}` : ""}
+          </div>
+          <div
+            style={{
+              fontSize: 8,
+              color: "#999",
+              fontFamily: "'Inter', sans-serif",
+              marginTop: 1,
+            }}
+          >
+            {card.priceLabel}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   const renderPosterPreview = () => (
     <div
       ref={posterRef}
@@ -248,244 +689,24 @@ const PosterGenerator = ({ onNavigateInvoice }: PosterGeneratorProps) => {
       <div
         style={{
           padding: "24px 28px",
-          display: "flex",
-          flexDirection: "column",
-          gap: 18,
           marginTop: -130,
           background: "#f5f5f5",
+          ...(cardLayout === "grid"
+            ? {
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: 14,
+              }
+            : {
+                display: "flex",
+                flexDirection: "column" as const,
+                gap: 18,
+              }),
         }}
       >
-        {cards.map((card) => (
-          <div
-            key={card.id}
-            style={{ 
-              background: "#ffffff",
-              borderRadius: 30,
-              border: "1.5px solid #e2e2e2",
-              padding: "22px 24px",
-              
-          zIndex: 1000,
-              display: "flex",
-              gap: 16,
-              
-            }}
-          >
-            {/* Left Side */}
-            <div style={{ flex: 1, minWidth: 0 }}>
-              {/* Route Line */}
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 10,
-                  marginBottom: 10,
-                }}
-              >
-                <span
-                  style={{
-                    fontSize: 28,
-                    fontWeight: 800,
-                    color: "#1a1a1a",
-                    fontFamily: "'Inter', sans-serif",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {card.from}
-                </span>
-                <img
-                  src="/fromtodesign.svg"
-                  alt="route"
-                  style={{
-                    width: 140,
-                    height: 36,
-                    objectFit: "contain",
-                  }}
-                />
-                <span
-                  style={{
-                    fontSize: 28,
-                    fontWeight: 800,
-                    color: "#1a1a1a",
-                    fontFamily: "'Inter', sans-serif",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {card.to}
-                </span>
-              </div>
-
-              {/* Connecting Details — Badges */}
-              <div
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: 8,
-                  marginBottom: 10,
-                }}
-              >
-                {card.connectingDetails.filter((detail) => detail.trim() !== "").map((detail, i) => (
-                  <span
-                    key={i}
-                    style={{
-                      display: "inline-block",
-                      background: "#F5F5F5",
-                      color: "#414651",
-                      fontSize: 14,
-                      fontWeight: 500,
-                      padding: "6px 16px",
-                      borderRadius: 999,
-                      fontFamily: "'Inter', sans-serif",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    {detail}
-                  </span>
-                ))}
-              </div>
-
-              {/* Luggage Badge */}
-              {card.luggage && card.luggage.trim() !== "" && (
-                <div
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 6,
-                    background: "#EFF8FF",
-                    color: "#017746",
-                    padding: "5px 16px",
-                    borderRadius: 999,
-                    fontSize: 14,
-                    fontWeight: 700,
-                    fontFamily: "'Inter', sans-serif",
-                    marginBottom: 14,
-                  }}
-                >
-                  <IconLuggage size={18} stroke={2.2} /> {card.luggage}
-                </div>
-              )}
-
-              {/* Date Badges */}
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                {card.dates.filter((d) => d.day.trim() !== "" || d.month.trim() !== "").map((d, i) => (
-                  <div
-                    key={i}
-                    style={{
-                      textAlign: "center",
-                      borderRadius: 15,
-                      padding: "10px 14px 8px",
-                      minWidth: 56,
-                      background: "#F5F5F5",
-                    }}
-                  >
-                    <div
-                      style={{
-                        fontSize: 32,
-                        fontWeight: 900,
-                        color: "#414651",
-                        lineHeight: 1,
-                        fontFamily: "'Inter', sans-serif",
-                      }}
-                    >
-                      {d.day}
-                    </div>
-                    <div
-                      style={{
-                        fontSize: 12,
-                        fontWeight: 700,
-                        color: "#414651",
-                        textTransform: "uppercase",
-                        fontFamily: "'Inter', sans-serif",
-                        letterSpacing: 0.5,
-                        marginTop: 2,
-                      }}
-                    >
-                      {d.month}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Right Side */}
-            <div
-              style={{
-                width: 200,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-end",
-                justifyContent: "space-between",
-                paddingTop: 4,
-                paddingBottom: 4,
-              }}
-            >
-              {card.logoUrl ? (
-                <div
-                  style={{
-                    width: 170,
-                    height: 80,
-                    background: "#FAFAFA",
-                    borderRadius: 20,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    padding: 12,
-                  }}
-                >
-                  <img
-                    src={card.logoUrl}
-                    alt="Airline Logo"
-                    style={{
-                      maxWidth: "100%",
-                      maxHeight: "100%",
-                      objectFit: "contain",
-                    }}
-                  />
-                </div>
-              ) : (
-                <div
-                  style={{
-                    width: 170,
-                    height: 80,
-                    border: "2px dashed #ccc",
-                    borderRadius: 20,
-                    background: "#FAFAFA",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    color: "#bbb",
-                    fontSize: 12,
-                    fontFamily: "'Inter', sans-serif",
-                  }}
-                >
-                  Airline Logo
-                </div>
-              )}
-              <div style={{ textAlign: "right", marginTop: 12 }}>
-                <div
-                  style={{
-                    fontSize: 36,
-                    fontWeight: 900,
-                    color: "#1a8a3f",
-                    lineHeight: 1.1,
-                    fontFamily: "'Inter', sans-serif",
-                  }}
-                >
-                  {card.price !== "" && card.price !== null && card.price !== undefined ? `₹${card.price}` : ""}
-                </div>
-                <div
-                  style={{
-                    fontSize: 11,
-                    color: "#999",
-                    fontFamily: "'Inter', sans-serif",
-                    marginTop: 2,
-                  }}
-                >
-                  {card.priceLabel}
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
+        {cards.map((card) =>
+          cardLayout === "grid" ? renderGridCard(card) : renderListCard(card)
+        )}
       </div>
 
       {/* Footer — actual image */}
@@ -556,6 +777,36 @@ const PosterGenerator = ({ onNavigateInvoice }: PosterGeneratorProps) => {
                   data={HEADER_BANNER_OPTIONS}
                   value={headerBanner}
                   onChange={(val) => setHeaderBanner(val || "/headerbanner/banner1.svg")}
+                  mb="sm"
+                />
+                <Text size="sm" fw={600} mb={4}>
+                  Card Layout
+                </Text>
+                <SegmentedControl
+                  value={cardLayout}
+                  onChange={(val) => setCardLayout(val as "list" | "grid")}
+                  data={[
+                    {
+                      value: "list",
+                      label: (
+                        <Group gap={6} wrap="nowrap">
+                          <List size={14} />
+                          <span>List</span>
+                        </Group>
+                      ),
+                    },
+                    {
+                      value: "grid",
+                      label: (
+                        <Group gap={6} wrap="nowrap">
+                          <LayoutGrid size={14} />
+                          <span>Grid</span>
+                        </Group>
+                      ),
+                    },
+                  ]}
+                  fullWidth
+                  color="green"
                 />
               </Paper>
 
