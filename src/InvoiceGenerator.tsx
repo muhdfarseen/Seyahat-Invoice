@@ -26,12 +26,13 @@ import { useReactToPrint } from "react-to-print";
 
 interface InvoiceGeneratorProps {
   onNavigatePoster: () => void;
+  onNavigateBahrain: () => void;
 }
 
 const generateRandomInvoiceNumber = () =>
   String(Math.floor(1000000000 + Math.random() * 9000000000));
 
-const InvoiceGenerator = ({ onNavigatePoster }: InvoiceGeneratorProps) => {
+const InvoiceGenerator = ({ onNavigatePoster, onNavigateBahrain }: InvoiceGeneratorProps) => {
   const contentRef = useRef<HTMLDivElement>(null);
   const reactToPrintFn = useReactToPrint({ contentRef });
   const [currency, setCurrency] = useState("₹");
@@ -270,6 +271,16 @@ Wishing you safe travels and unforgettable experiences!
               size="sm"
             >
               Generate Poster
+            </Button>
+            <Button
+              radius={"md"}
+              leftSection={<ImageIcon size={16} />}
+              onClick={onNavigateBahrain}
+              color="orange"
+              variant="light"
+              size="sm"
+            >
+              Bahrain Visa
             </Button>
             <Button
               radius={"md"}
