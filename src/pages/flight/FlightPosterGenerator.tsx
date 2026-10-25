@@ -4,23 +4,23 @@ import {
   TextInput,
   NumberInput,
   Paper,
-  Title,
   Text,
   Group,
   Stack,
   ActionIcon,
   Box,
-  Flex,
   SimpleGrid,
-  Image,
   ScrollArea,
   FileInput,
   Select,
   SegmentedControl,
 } from "@mantine/core";
-import { Plus, Trash2, Download, ArrowLeft, Upload, LayoutGrid, List } from "lucide-react";
+import { Plus, Trash2, Download, Upload, LayoutGrid, List } from "lucide-react";
 import { IconLuggage } from "@tabler/icons-react";
 import { toPng } from "html-to-image";
+import Layout from "../../components/Layout";
+import { useNavigation } from "../../NavigationContext";
+import { ScaledPosterPreview } from "../../components/ScaledPosterPreview";
 
 interface FlightDate {
   day: string;
@@ -86,11 +86,7 @@ const createEmptyCard = (id: number): FlightCard => ({
   priceLabel: "One Way for Traveler",
 });
 
-interface PosterGeneratorProps {
-  onNavigateInvoice: () => void;
-}
-
-const PosterGenerator = ({ onNavigateInvoice }: PosterGeneratorProps) => {
+const FlightPosterGenerator = () => {
   const posterRef = useRef<HTMLDivElement>(null);
   const [cards, setCards] = useState<FlightCard[]>([createEmptyCard(1)]);
   const [cardLayout, setCardLayout] = useState<"list" | "grid">("list");
@@ -723,63 +719,95 @@ const PosterGenerator = ({ onNavigateInvoice }: PosterGeneratorProps) => {
 
   // ─── Form Render ────────────────────────────────────────
 
+  const { navigateHome } = useNavigation();
+
   return (
-    <Flex direction="column" h="100vh" bg="gray.0">
-      {/* Header */}
-      <Paper
-        style={{ position: "sticky", top: 0, zIndex: 9000 }}
-        shadow="md"
-        p="lg"
-        radius={0}
-      >
-        <Group justify="space-between" align="center">
-          <Group gap="sm">
-            <ActionIcon
-              variant="subtle"
-              color="gray"
-              size="lg"
-              onClick={onNavigateInvoice}
-            >
-              <ArrowLeft size={20} />
-            </ActionIcon>
-            <Image src="/Seyahat.png" alt="Logo" w={100} />
-          </Group>
-          <Title order={5} c="gray.9">
-            Poster Generator
-          </Title>
-          <Button
-            radius="md"
-            leftSection={<Download size={16} />}
-            onClick={handleDownload}
-            color="green"
-            size="sm"
-          >
-            Download Image
-          </Button>
-        </Group>
-      </Paper>
+    <Layout
+      title="Flight Rate Poster"
+      onNavigateHome={navigateHome}
+      actions={
+        <Button
+          radius="md"
+          leftSection={<Download size={16} />}
+          onClick={handleDownload}
+          color="green"
+          size="sm"
+        >
+          Download Image
+        </Button>
+      }
+    >
 
       <SimpleGrid
         cols={{ base: 1, sm: 1, lg: 2 }}
         spacing={{ base: 0, sm: 0 }}
         verticalSpacing={{ base: 0, sm: 0 }}
+        style={{ flex: 1, minHeight: 0, height: "100%" }}
       >
         {/* Input Form */}
-        <Paper withBorder radius={0}>
-          <ScrollArea h="calc(100vh - 78px)">
+        <Paper
+          withBorder
+          radius={0}
+          style={{ height: "100%", display: "flex", flexDirection: "column", minHeight: 0 }}
+        >
+          <ScrollArea style={{ flex: 1, height: "100%" }}>
             <Stack p="md" gap="lg">
               {/* Poster Settings */}
               <Paper withBorder p="md" radius="md" bg="gray.0">
                 <Text size="sm" fw={700} c="green.7" mb="sm">
                   Poster Settings
                 </Text>
-                <Select
-                  label="Header Banner"
-                  data={HEADER_BANNER_OPTIONS}
-                  value={headerBanner}
-                  onChange={(val) => setHeaderBanner(val || "/headerbanner/banner1.svg")}
-                  mb="sm"
-                />
+                <Box mb="md">
+                  <Text size="sm" fw={600} mb="xs">
+                    Header Banner
+                  </Text>
+                  <SimpleGrid cols={3} spacing="xs">
+                    {HEADER_BANNER_OPTIONS.map((banner) => {
+                      const isSelected = headerBanner === banner.value;
+                      return (
+                        <Box
+                          key={banner.value}
+                          onClick={() => setHeaderBanner(banner.value)}
+                          style={{
+                            cursor: "pointer",
+                            border: isSelected ? "2px solid #228be6" : "1px solid #dee2e6",
+                            borderRadius: 8,
+                            padding: 3,
+                            backgroundColor: isSelected ? "#e7f5ff" : "#ffffff",
+                            transition: "all 0.15s ease",
+                            position: "relative",
+                            overflow: "hidden",
+                            boxShadow: isSelected ? "0 0 0 2px rgba(34, 139, 230, 0.25)" : "none",
+                          }}
+                        >
+                          <Box
+                            style={{
+                              width: "100%",
+                              aspectRatio: "1080 / 426",
+                              borderRadius: 5,
+                              overflow: "hidden",
+                              background: "#f1f3f5",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <img
+                              src={banner.value}
+                              alt={banner.label}
+                              style={{
+                                width: "100%",
+                                height: "100%",
+                                objectFit: "cover",
+                                display: "block",
+                              }}
+                            />
+                          </Box>
+                        </Box>
+                      );
+                    })}
+                  </SimpleGrid>
+                </Box>
                 <Text size="sm" fw={600} mb={4}>
                   Card Layout
                 </Text>
@@ -1024,26 +1052,22 @@ const PosterGenerator = ({ onNavigateInvoice }: PosterGeneratorProps) => {
         </Paper>
 
         {/* Preview */}
-        <Paper withBorder radius={0}>
-          <ScrollArea h="calc(100vh - 78px)">
+        <Paper
+          withBorder
+          radius={0}
+          style={{ height: "100%", display: "flex", flexDirection: "column", minHeight: 0 }}
+        >
+          <ScrollArea style={{ flex: 1, height: "100%" }}>
             <Box p="md" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-              <Text size="xs" c="dimmed" mb="sm" ta="center">
-                Live Preview
-              </Text>
-              <Box
-                style={{
-                  transform: "scale(0.72)",
-                  transformOrigin: "top center",
-                }}
-              >
+              <ScaledPosterPreview width={800} scale={0.72}>
                 {renderPosterPreview()}
-              </Box>
+              </ScaledPosterPreview>
             </Box>
           </ScrollArea>
         </Paper>
       </SimpleGrid>
-    </Flex>
+    </Layout>
   );
 };
 
-export default PosterGenerator;
+export default FlightPosterGenerator;

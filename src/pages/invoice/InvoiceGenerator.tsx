@@ -21,18 +21,15 @@ import {
   Select,
   Switch,
 } from "@mantine/core";
-import { Plus, Trash2, Download, Image as ImageIcon } from "lucide-react";
+import { Plus, Trash2, Download } from "lucide-react";
 import { useReactToPrint } from "react-to-print";
-
-interface InvoiceGeneratorProps {
-  onNavigatePoster: () => void;
-  onNavigateBahrain: () => void;
-}
+import Layout from "../../components/Layout";
+import { useNavigation } from "../../NavigationContext";
 
 const generateRandomInvoiceNumber = () =>
   String(Math.floor(1000000000 + Math.random() * 9000000000));
 
-const InvoiceGenerator = ({ onNavigatePoster, onNavigateBahrain }: InvoiceGeneratorProps) => {
+const InvoiceGenerator = () => {
   const contentRef = useRef<HTMLDivElement>(null);
   const reactToPrintFn = useReactToPrint({ contentRef });
   const [currency, setCurrency] = useState("₹");
@@ -247,63 +244,40 @@ Wishing you safe travels and unforgettable experiences!
       ? invoiceData.discount
       : 0;
 
+  const { navigateHome } = useNavigation();
+
   return (
-    <Flex direction={"column"} h="100vh" bg="gray.0">
-      {/* Header Section */}
-      <Paper
-        style={{ position: "sticky", top: 0, zIndex: 9000 }}
-        shadow="md"
-        p="lg"
-        radius={0}
-      >
-        <Group justify="space-between" align="center">
-          <Image src={`Seyahat.png`} alt="Logo" w={"100"} />
-          <Title order={5} c="gray.9">
-            Invoice Generator
-          </Title>
-          <Group gap="sm">
-            <Button
-              radius={"md"}
-              leftSection={<ImageIcon size={16} />}
-              onClick={onNavigatePoster}
-              color="teal"
-              variant="light"
-              size="sm"
-            >
-              Generate Poster
-            </Button>
-            <Button
-              radius={"md"}
-              leftSection={<ImageIcon size={16} />}
-              onClick={onNavigateBahrain}
-              color="orange"
-              variant="light"
-              size="sm"
-            >
-              Bahrain Visa
-            </Button>
-            <Button
-              radius={"md"}
-              leftSection={<Download size={16} />}
-              onClick={reactToPrintFn}
-              color="green"
-              size="sm"
-            >
-              Download PDF
-            </Button>
-          </Group>
-        </Group>
-      </Paper>
+    <Layout
+      title="Invoice Generator"
+      onNavigateHome={navigateHome}
+      actions={
+        <Button
+          radius={"md"}
+          leftSection={<Download size={16} />}
+          onClick={reactToPrintFn}
+          color="green"
+          size="sm"
+        >
+          Download PDF
+        </Button>
+      }
+    >
 
       <SimpleGrid
         cols={{ base: 1, sm: 1, lg: 2 }}
         spacing={{ base: 0, sm: 0 }}
         verticalSpacing={{ base: 0, sm: 0 }}
+        style={{ flex: 1, minHeight: 0, height: "100%" }}
       >
         {/* Input Form - Left Section */}
 
-        <Paper withBorder radius={0}>
-          <Accordion defaultValue={"inv"} radius="md">
+        <Paper
+          withBorder
+          radius={0}
+          style={{ height: "100%", display: "flex", flexDirection: "column", minHeight: 0 }}
+        >
+          <ScrollArea style={{ flex: 1, height: "100%" }}>
+            <Accordion defaultValue={"inv"} radius="md">
             <Accordion.Item value={"cmny"}>
               <Accordion.Control>
                 <Text size="sm" fw={700} c="gray.9">
@@ -575,12 +549,17 @@ Wishing you safe travels and unforgettable experiences!
               </Accordion.Panel>
             </Accordion.Item>
           </Accordion>
+          </ScrollArea>
         </Paper>
 
         {/* Preview - Right Section */}
 
-        <Paper withBorder radius={0}>
-          <ScrollArea h={"calc(100vh - 78px)"}>
+        <Paper
+          withBorder
+          radius={0}
+          style={{ height: "100%", display: "flex", flexDirection: "column", minHeight: 0 }}
+        >
+          <ScrollArea style={{ flex: 1, height: "100%" }}>
             <Paper ref={contentRef} p="xl" maw="800px" mx="auto">
               {/* Header */}
               <Group justify="space-between" mb="xl">
@@ -767,7 +746,7 @@ Wishing you safe travels and unforgettable experiences!
           </ScrollArea>
         </Paper>
       </SimpleGrid>
-    </Flex>
+    </Layout>
   );
 };
 

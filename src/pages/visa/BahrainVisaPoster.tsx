@@ -3,25 +3,18 @@ import {
   Button,
   NumberInput,
   Paper,
-  Title,
   Text,
-  Group,
   Stack,
-  ActionIcon,
-  Box,
-  Flex,
   SimpleGrid,
-  Image,
   ScrollArea,
 } from "@mantine/core";
-import { Download, ArrowLeft } from "lucide-react";
+import { Download } from "lucide-react";
 import { toPng } from "html-to-image";
+import Layout from "../../components/Layout";
+import { useNavigation } from "../../NavigationContext";
+import { AutoFitPosterPreview } from "../../components/AutoFitPosterPreview";
 
-interface BahrainPosterEditorProps {
-  onNavigateBack: () => void;
-}
-
-const BahrainPosterEditor = ({ onNavigateBack }: BahrainPosterEditorProps) => {
+const BahrainVisaPoster = () => {
   const posterRef = useRef<HTMLDivElement>(null);
 
   const [price14Days, setPrice14Days] = useState<number | string>(14500);
@@ -143,50 +136,38 @@ const BahrainPosterEditor = ({ onNavigateBack }: BahrainPosterEditorProps) => {
     </div>
   );
 
+  const { navigateHome } = useNavigation();
+
   return (
-    <Flex direction="column" h="100vh" bg="gray.0">
-      {/* Header */}
-      <Paper
-        style={{ position: "sticky", top: 0, zIndex: 9000 }}
-        shadow="md"
-        p="lg"
-        radius={0}
-      >
-        <Group justify="space-between" align="center">
-          <Group gap="sm">
-            <ActionIcon
-              variant="subtle"
-              color="gray"
-              size="lg"
-              onClick={onNavigateBack}
-            >
-              <ArrowLeft size={20} />
-            </ActionIcon>
-            <Image src="/Seyahat.png" alt="Logo" w={100} />
-          </Group>
-          <Title order={5} c="gray.9">
-            Bahrain Visa Poster
-          </Title>
-          <Button
-            radius="md"
-            leftSection={<Download size={16} />}
-            onClick={handleDownload}
-            color="green"
-            size="sm"
-          >
-            Download Image
-          </Button>
-        </Group>
-      </Paper>
+    <Layout
+      title="Bahrain Visa Poster"
+      onNavigateHome={navigateHome}
+      actions={
+        <Button
+          radius="md"
+          leftSection={<Download size={16} />}
+          onClick={handleDownload}
+          color="green"
+          size="sm"
+        >
+          Download Image
+        </Button>
+      }
+    >
 
       <SimpleGrid
         cols={{ base: 1, sm: 1, lg: 2 }}
         spacing={{ base: 0, sm: 0 }}
         verticalSpacing={{ base: 0, sm: 0 }}
+        style={{ flex: 1, minHeight: 0, height: "100%" }}
       >
         {/* Input Form */}
-        <Paper withBorder radius={0}>
-          <ScrollArea h="calc(100vh - 78px)">
+        <Paper
+          withBorder
+          radius={0}
+          style={{ height: "100%", display: "flex", flexDirection: "column", minHeight: 0 }}
+        >
+          <ScrollArea style={{ flex: 1, height: "100%" }}>
             <Stack p="md" gap="lg">
               {/* Price Editor */}
               <Paper withBorder p="md" radius="md" bg="gray.0">
@@ -239,52 +220,23 @@ const BahrainPosterEditor = ({ onNavigateBack }: BahrainPosterEditorProps) => {
                   />
                 </Stack>
               </Paper>
-
-              {/* Instructions */}
-              <Paper withBorder p="md" radius="md" bg="green.0">
-                <Text size="sm" fw={600} c="green.8" mb={4}>
-                  How to use
-                </Text>
-                <Text size="xs" c="green.7" style={{ lineHeight: 1.6 }}>
-                  1. Enter the prices for each visa type above
-                  <br />
-                  2. Preview updates live on the right
-                  <br />
-                  3. Click "Download Image" to save the poster
-                </Text>
-              </Paper>
             </Stack>
           </ScrollArea>
         </Paper>
 
         {/* Preview */}
-        <Paper withBorder radius={0}>
-          <ScrollArea h="calc(100vh - 78px)">
-            <Box
-              p="md"
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              <Text size="xs" c="dimmed" mb="sm" ta="center">
-                Live Preview
-              </Text>
-              <Box
-                style={{
-                  transform: "scale(0.72)",
-                  transformOrigin: "top center",
-                }}
-              >
-                {renderPosterPreview()}
-              </Box>
-            </Box>
-          </ScrollArea>
+        <Paper
+          withBorder
+          radius={0}
+          style={{ height: "100%", display: "flex", flexDirection: "column", minHeight: 0, overflow: "hidden" }}
+        >
+          <AutoFitPosterPreview posterWidth={800} posterHeight={1000}>
+            {renderPosterPreview()}
+          </AutoFitPosterPreview>
         </Paper>
       </SimpleGrid>
-    </Flex>
+    </Layout>
   );
 };
 
-export default BahrainPosterEditor;
+export default BahrainVisaPoster;
