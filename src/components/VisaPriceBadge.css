@@ -1,0 +1,11 @@
+.figma-100-percent {
+  border-radius: 35.94px;
+  corner-shape: superellipse(1.6); /* Maps closely to Figma's 100% smoothing slider */
+  -webkit-corner-shape: superellipse(1.6);
+}
+
+.figma-100-percent-bottom {
+  border-radius: 0 0 21.94px 21.94px;
+  corner-shape: superellipse(1.6);
+  -webkit-corner-shape: superellipse(1.6);
+}

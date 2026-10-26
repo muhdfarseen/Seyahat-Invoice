@@ -9,8 +9,8 @@ interface AutoFitPosterPreviewProps {
 
 export const AutoFitPosterPreview = ({
   children,
-  posterWidth = 800,
-  posterHeight = 1000,
+  posterWidth = 1080,
+  posterHeight = 1350,
 }: AutoFitPosterPreviewProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState<number>(0.6);
